@@ -9,7 +9,7 @@ UCF ECE Senior Design (EEL 4914/4915L), Fall 2026 – Spring 2027.
 | Orion Brown | Computer Engineer |
 | Matias Guillen | Electrical Engineer |
 | Sebastian Candelaria | Computer Engineer |
-| Kevin | Computer Engineer |
+| Minh Hoang Ho | Computer Engineer |
 
 **Sponsor:** Azadeh Vosoughi, Christopher Iannello (ECE Department)
 

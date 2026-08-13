@@ -25,11 +25,16 @@ SEVERITY_COLORS = {
     "due_soon": 0xFBC02D,  # yellow
 }
 
+# Discord sits behind Cloudflare and blocks Python's default urllib User-Agent
+# (Cloudflare error 1010). A normal-looking UA avoids that.
+USER_AGENT = "Mozilla/5.0 (compatible; SeniorDesignTrelloDigest/1.0)"
+
 
 def trello_get(path, **params):
     params.update({"key": TRELLO_KEY, "token": TRELLO_TOKEN})
     url = f"https://api.trello.com/1{path}?{urllib.parse.urlencode(params)}"
-    with urllib.request.urlopen(url, timeout=20) as resp:
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(req, timeout=20) as resp:
         return json.loads(resp.read().decode())
 
 
@@ -110,7 +115,7 @@ def post_to_discord(embeds):
     req = urllib.request.Request(
         DISCORD_WEBHOOK_URL,
         data=body,
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json", "User-Agent": USER_AGENT},
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=20) as resp:

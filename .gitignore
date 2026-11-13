@@ -1,0 +1,16 @@
+# ESP-IDF generated output
+**/build/
+**/managed_components/
+**/sdkconfig
+**/sdkconfig.old
+
+# Local ESP-IDF source/toolchain installation
+/esp/
+
+# Local IDE and machine files
+.vscode/
+
+# Mobile build output
+mobile/**/build/
+mobile/**/.gradle/
+

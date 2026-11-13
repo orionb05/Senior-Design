@@ -1,0 +1,17 @@
+menu "SCESM Common"
+
+config SCESM_BRINGUP_ENABLE
+    bool "Enable serial bring-up verification"
+    default y
+    help
+        Periodically print system health information to the serial monitor.
+        Disable this after hardware bring-up if the periodic output is no longer
+        useful during normal operation.
+
+config SCESM_BRINGUP_INTERVAL_MS
+    int "Bring-up print interval (ms)"
+    range 100 3600000
+    default 1000
+    depends on SCESM_BRINGUP_ENABLE
+
+endmenu

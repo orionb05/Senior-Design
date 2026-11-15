@@ -23,7 +23,7 @@ static void led_blink_task(void *pvParameters)
 
 void app_main(void)
 {
-    scesm_bringup_start("hub");
+    scesm_bringup_start("central hub");
     ESP_ERROR_CHECK(led_init());
 
     // Create LED blinking task for testing

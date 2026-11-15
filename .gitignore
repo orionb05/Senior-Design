@@ -9,6 +9,7 @@
 
 # Local IDE and machine files
 .vscode/
+**/.clangd
 
 # Mobile build output
 mobile/**/build/

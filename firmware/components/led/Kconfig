@@ -1,0 +1,11 @@
+menu "SCESM LED"
+
+config SCESM_LED_GPIO
+    int "LED GPIO number"
+    range 0 48
+    default 1
+    help
+        GPIO connected to a status LED. Check the board pinout
+        and select a GPIO that is available for use.
+
+endmenu

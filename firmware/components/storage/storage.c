@@ -12,7 +12,6 @@
 // Define a tag for this component at the top of your file
 static const char *STORAGE_TAG = "SD_STORAGE";
 
-
 // Configure the SD card and mount the FAT filesystem
 esp_err_t sd_init(void)
 {
@@ -21,6 +20,7 @@ esp_err_t sd_init(void)
     // Set the SDMMC host controller with default configuration
     sdmmc_host_t host = SDMMC_HOST_DEFAULT();
     host.slot = SDMMC_HOST_SLOT_1;
+    host.max_freq_khz = 400; // TEST 3: Drop frequency to 400 kHz to survive breadboard capacitance
 
     // Initialize the SDMMC driver with the host configuration
     // err = sdmmc_host_init(); 
@@ -32,16 +32,18 @@ esp_err_t sd_init(void)
     sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
 
     // Set the GPIO pins for the SDMMC slot to the wired pinout
-    slot_config.clk = GPIO_NUM_15;
-    slot_config.cmd = GPIO_NUM_16;
-    slot_config.d0  = GPIO_NUM_4;
-    slot_config.d1  = GPIO_NUM_5;
-    slot_config.d2  = GPIO_NUM_6;
-    slot_config.d3  = GPIO_NUM_7;
-    slot_config.cd  = GPIO_NUM_10;
+    slot_config.clk = GPIO_NUM_6;
+    slot_config.cmd = GPIO_NUM_5;
+    slot_config.d0  = GPIO_NUM_7;
+    slot_config.d1  = GPIO_NUM_16;
+    slot_config.d2  = GPIO_NUM_13;
+    slot_config.d3  = GPIO_NUM_4;
+    // TEST 1: Bypass physical Card Detect logic
+    slot_config.cd  = GPIO_NUM_15;
+    // slot_config.cd  = SDMMC_SLOT_NO_CD;
 
     // Set the bus width to match the 4-bit DAT0-DAT3 wiring
-    slot_config.width = 4;
+    slot_config.width = 4; // TEST 2: Fall back to 1-bit mode to isolate DAT1-DAT3 wiring
 
     // Initialize the SDMMC slot with the host and slot configuration
     // err = sdmmc_host_init_slot(host.slot, &slot_config);

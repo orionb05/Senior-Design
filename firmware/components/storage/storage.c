@@ -20,7 +20,7 @@ esp_err_t sd_init(void)
     // Set the SDMMC host controller with default configuration
     sdmmc_host_t host = SDMMC_HOST_DEFAULT();
     host.slot = SDMMC_HOST_SLOT_1;
-    host.max_freq_khz = 400; // TEST 3: Drop frequency to 400 kHz to survive breadboard capacitance
+    host.max_freq_khz = SDMMC_FREQ_DEFAULT; // TEST 3: Drop frequency to 400 kHz to survive breadboard capacitance
 
     // Initialize the SDMMC driver with the host configuration
     // err = sdmmc_host_init(); 
@@ -39,7 +39,7 @@ esp_err_t sd_init(void)
     slot_config.d2  = GPIO_NUM_13;
     slot_config.d3  = GPIO_NUM_4;
     // TEST 1: Bypass physical Card Detect logic
-    slot_config.cd  = GPIO_NUM_15;
+    // slot_config.cd  = GPIO_NUM_15;
     // slot_config.cd  = SDMMC_SLOT_NO_CD;
 
     // Set the bus width to match the 4-bit DAT0-DAT3 wiring

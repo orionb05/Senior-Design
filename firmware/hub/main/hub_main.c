@@ -37,6 +37,7 @@ static void data_log_task(void *pvParameters)
         }
     } else {
         ESP_LOGE(TAG, "Failed to open data.csv");
+        vTaskDelete(NULL); // Stop this task instead of writing to a NULL file
     }
 
     while(1) {
@@ -91,8 +92,11 @@ void app_main(void)
         return;
     }
 
-    // Initialize the microSD card
-    ESP_ERROR_CHECK(sd_init());
+    // Initialize the microSD card (non-fatal: keep running if no card is present)
+    esp_err_t sd_err = sd_init();
+    if (sd_err != ESP_OK) {
+        ESP_LOGW(TAG, "SD card unavailable (%s) - continuing without logging", esp_err_to_name(sd_err));
+    }
 
     // Create LED blinking task for testing
     BaseType_t led_result = xTaskCreatePinnedToCore(
@@ -110,19 +114,22 @@ void app_main(void)
         ESP_LOGE(TAG, "Failed to create LED blink task");
     }
 
-    BaseType_t data_log_result = xTaskCreatePinnedToCore(
-        data_log_task,
-        "data_log",
-        4096,   // Stack size in bytes
-        NULL,
-        4,      // Task priority
-        NULL,
-        1       // Pin to core 1
-    );
+    // Only start the data log task if the SD card mounted
+    if (sd_err == ESP_OK) {
+        BaseType_t data_log_result = xTaskCreatePinnedToCore(
+            data_log_task,
+            "data_log",
+            4096,   // Stack size in bytes
+            NULL,
+            4,      // Task priority
+            NULL,
+            1       // Pin to core 1
+        );
 
-    // Task init failure debug output
-    if (data_log_result != pdPASS) {
-        ESP_LOGE(TAG, "Failed to create data log task");
+        // Task init failure debug output
+        if (data_log_result != pdPASS) {
+            ESP_LOGE(TAG, "Failed to create data log task");
+        }
     }
 
     // ** DEBUG TEST **: Send a test telemetry data packet to the queue

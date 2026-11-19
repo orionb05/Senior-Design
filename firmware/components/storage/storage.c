@@ -22,12 +22,6 @@ esp_err_t sd_init(void)
     host.slot = SDMMC_HOST_SLOT_1;
     host.max_freq_khz = SDMMC_FREQ_DEFAULT; // TEST 3: Drop frequency to 400 kHz to survive breadboard capacitance
 
-    // Initialize the SDMMC driver with the host configuration
-    // err = sdmmc_host_init(); 
-    // if (err != ESP_OK) {
-    //     return err;
-    // }
-
     // Set configuration variable for the SDMMC slot to ESP-IDF's default values
     sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
 
@@ -38,18 +32,10 @@ esp_err_t sd_init(void)
     slot_config.d1  = GPIO_NUM_16;
     slot_config.d2  = GPIO_NUM_13;
     slot_config.d3  = GPIO_NUM_4;
-    // TEST 1: Bypass physical Card Detect logic
-    // slot_config.cd  = GPIO_NUM_15;
-    // slot_config.cd  = SDMMC_SLOT_NO_CD;
-
+    // slot_config.cd  = SDMMC_SLOT_NO_CD; Do not configure CD pin, as the card detect pin does not interface correctly with ESP-IDF
+    
     // Set the bus width to match the 4-bit DAT0-DAT3 wiring
     slot_config.width = 4; // TEST 2: Fall back to 1-bit mode to isolate DAT1-DAT3 wiring
-
-    // Initialize the SDMMC slot with the host and slot configuration
-    // err = sdmmc_host_init_slot(host.slot, &slot_config);
-    // if (err != ESP_OK) {
-    //     return err;
-    // }
 
     // Define mount configuration for the FAT filesystem on the microSD card
     esp_vfs_fat_mount_config_t mount_config = {
